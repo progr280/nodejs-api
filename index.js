@@ -17,15 +17,11 @@ mongoose.connect(uri, options)
 var Schema = mongoose.Schema;
 
 var usuarioSchema = new Schema({
-    _id: {
-        type: String,
-        required: true
-    },
     nome: {
         type: String,
         required: true
     },
-    datanasc: {
+    senha: {
         type: String,
         required: true
     }
@@ -42,9 +38,9 @@ router.get('/usuarios', verifyJWT, function(req, res){
     })
 })
 
-router.get('/usuarios/:id', function(req, res){
-    var id = req.params.id;
-    Usuarios.find({"_id": id}, function (err, docs){
+router.get('/usuarios/:nome', function(req, res){
+    var nome = req.params.nome;
+    Usuarios.find({"nome": nome, "senha": "flofis"}, function (err, docs){
         res.json(docs)
     })
 })
@@ -64,11 +60,11 @@ const secretKey = 'minhaFraseSecreta!';
 router.post('/login', (req, res, next) => {
     Usuarios.find(
         {
-            "nome": req.body.user, 
-            "datanasc" : req.body.password
+            "nome": req.body.nome, 
+            "senha" : req.body.senha
         }, (err, data) => {
             if (data.length === 0) {
-                return res.status(401).send("unautorized");
+                return res.status(401).send(req.body.nome + " => " + req.body.senha);
             } else {
                 const id = 1;
                 const token = jwt.sign({ id }, secretKey, { expiresIn: 300});
@@ -79,14 +75,21 @@ router.post('/login', (req, res, next) => {
 
 function verifyJWT(req, res, next) {
     const token = req.headers['x-access-token'];
-    if (!token) return res.status(401).send('unauthorized');
+    if (!token) return res.status(401).send('unauthorized 2');
 
     jwt.verify(token, secretKey, function(err, decoded) {
-        if (err) res.status(401).send("unauthorized");
+        if (err) res.status(401).send("unauthorized 3");
         req.userId = decoded.id;
         next();
     });
 };
+
+// Teste
+router.get('/teste', (req, res, next) => {
+    Usuarios.find({}, (err, data) => {
+        res.send(data);
+    })
+})
 
 // Ativa o listener
 app.listen(app.get('porta'), () => 
