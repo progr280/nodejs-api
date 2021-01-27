@@ -79,7 +79,7 @@ function verifyJWT(req, res, next) {
 
     jwt.verify(token, secretKey, function(err, decoded) {
         if (err) res.status(401).send("unauthorized 3");
-        req.userId = decoded.id;
+        req.nome = decoded.nome;
         next();
     });
 };
