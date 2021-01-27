@@ -40,7 +40,7 @@ router.get('/usuarios', verifyJWT, function(req, res){
 
 router.get('/usuarios/:nome', function(req, res){
     var nome = req.params.nome;
-    Usuarios.find({"nome": nome, "senha": "flofis"}, function (err, docs){
+    Usuarios.find({"nome": nome}, function (err, docs){
         res.json(docs)
     })
 })
