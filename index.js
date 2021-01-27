@@ -50,7 +50,7 @@ router.get('/usuarios/:nome', function(req, res){
 app = express();
 
 // Configura o Express
-app.set('porta', 80);
+app.set('porta', 3000);
 app.use(bodyParser.json());
 app.use('/', router);
 
